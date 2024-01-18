@@ -1,9 +1,9 @@
-C_SOURCES = $(wildcard kernel/*.c kernel/arch/x86/*.c) 
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/arch/x86/*.c) 
 HEADERS = $(wildcard kernel/*.h include/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
-CCFLAGS = -m32 -std=c90 -Og \
-	  -Wall -Wextra \
+CCFLAGS = -m32 -std=c99 -Og \
+	  -Wall -Wextra -Wpedantic \
 	  -nostdlib -ffreestanding \
 	  -fno-pie -fno-stack-protector \
 	  -I include/ -I include/arch/x86
