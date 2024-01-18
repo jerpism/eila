@@ -10,6 +10,11 @@
 #define SCREEN_CTRL_REG 0x3d4
 #define SCREEN_DATA_REG 0x3d5
 
+/* Just a fun little test */
+struct color_string{
+    char *str;
+    uint8_t color;
+};
 
 typedef enum{
     BLACK   = 0x00,
@@ -127,9 +132,22 @@ void clear_screen(){
     set_cursor(get_offset(0, 0));
 }
 
+/* Prints a colored string at cursor position */
+void print_color(struct color_string *s){
+    for(int i = 0; s->str[i]; ++i){
+        print_char(s->str[i], s->color, -1, -1);
+    }
+}
+
 
 void test_print(){
+    struct color_string string = {
+        .str = "And hello this is a colorful string",
+        .color = get_color(LRED, BLUE)
+    };
+        
     clear_screen();
-    print("Hello we are now loaded into the kernel and have a working VGA text mode print");
+    print("Hello we are loaded into the kernel and have a working VGA text mode print :)! ");
+    print_color(&string);
 }
 
