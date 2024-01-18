@@ -62,6 +62,11 @@ _start:
     mov     ds, ax
     mov     es, ax
 
+    ; set display mode to 80x25 text color
+    mov     ah, 0x00
+    mov     al, 0x03
+    int     0x10
+
     ; welcome message
     mov     bx, STR_WELCOME
     call    print_str
