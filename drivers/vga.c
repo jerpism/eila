@@ -88,9 +88,31 @@ void print_char(uint8_t character, int color, int col, int row){
         set_cursor(offset);
     }
 
+    /* TODO: add newline handling */
+
     /* Write out character with specified bg and fg colors */
     /* and point to next character */
     *(VGA_MEM + offset++) = (color << 8) | character;
+    set_cursor(offset);
+}
+
+void print_at(char *s, int col, int row){
+    /* TODO: this is janky, I don't like repeating 
+     * the same check as in print_char() here
+     * but this is a lazy initial version to get a print working
+     * so it'll just have to do for now */
+    if(col >= 0 && row >= 0){
+        set_cursor(get_offset(col, row));
+    }
+
+    for(; *s; s++){
+        print_char(*s, 0, -1, -1);
+    }
+}
+
+/* Prints a string at current cursor position */
+void print(char *s){
+    print_at(s, -1, -1);
 }
 
 /* Clears the screen */
@@ -108,8 +130,6 @@ void clear_screen(){
 
 void test_print(){
     clear_screen();
-    print_char('D', get_color(RED, BLUE),40, 2);
-
-
+    print("Hello we are now loaded into the kernel and have a working VGA text mode print");
 }
 
