@@ -1,6 +1,6 @@
 [org 0x7c00]
+jmp _start
 
-SECTION .data
     gdt_start:
 
     ; GDT null descriptor 
@@ -17,22 +17,22 @@ SECTION .data
         ; Flags 2:      (granularity)1 (32-bit default)1 (64-bit seg)0 (AVL) 0 
         ; -> 0b1100
         dw  0xffff      ; limit (0-15)
-        dw  0x0000      ; base  (0-15)
-        dw  0x0000      ; base  (16-23)
+        dw  0x0         ; base  (0-15)
+        db  0x0         ; base  (16-23)
         db  0b10011010  ; 1st flags, type flags
         db  0b11001111  ; 2nd flags, limit (16-19)
-        dw  0x0000      ; base  (24-31)
+        db  0x0         ; base  (24-31)
 
     gdt_data:
         ; See above for base, limit, flags 1&2
         ; Type flags:   (code)0 (expand down)0 (writable)1 (accessed)0 
         ; -> 0b0010
         dw  0xffff      ; limit (0-15)
-        dw  0x0000      ; base  (0-15)
-        dw  0x0000      ; base  (16-23)
+        dw  0x0         ; base  (0-15)
+        db  0x0         ; base  (16-23)
         db  0b10010010  ; 1st flags, type flags
         db  0b11001111  ; 2nd flags, limit (16-19)
-        dw  0x0000      ; base  (24-31)
+        db  0x0         ; base  (24-31)
     gdt_end:
 
 
@@ -74,6 +74,10 @@ _start:
     mov     dh, 15              ; read 15 sectors
     mov     dl, [BOOT_DRIVE]    ; from the drive we booted
     call    read_disk
+
+    mov     bx, STR_DISKREAD
+    call    print_str
+
 
     ; leave the real world behind
     ; will never return
@@ -172,6 +176,7 @@ BOOT_DRIVE: db 0
 STR_WELCOME: db "Hello! Booted up in real mode", 0xa, 0xd, 0x0
 STR_READDISK: db "Reading disk...", 0xa, 0xd, 0x0
 STR_DISKERROR: db "ERROR READING DISK", 0xa, 0xd, 0x0
+STR_DISKREAD: db "Disk read succesful, switching to protected mode...", 0xa, 0xd, 0x0
 
 ; Padding and boot sector magic
 times 510-($-$$) db 0
