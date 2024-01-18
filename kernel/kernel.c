@@ -1,6 +1,7 @@
+#include <stdint.h>
 
 void main(){
-    unsigned char *vga = (unsigned char*)0xb8000;
+    uint8_t *vga = (unsigned char*)0xb8000;
 
     /* Print out a XD at the top of the screen*/
     *vga = 'X';
