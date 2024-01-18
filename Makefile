@@ -2,6 +2,12 @@ C_SOURCES = $(wildcard kernel/*.c)
 HEADERS = $(wildcard kernel/*.h include/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
+CCFLAGS = -m32 -std=c90 -Og \
+	  -Wall -Wextra \
+	  -nostdlib -ffreestanding \
+	  -fno-pie -fno-stack-protector \
+	  -I ./include/
+
 all: os-image
 
 run: all
@@ -14,7 +20,7 @@ kernel.bin : kernel/kernel_entry.o ${OBJ}
 	ld -m elf_i386 -o $@ -Ttext 0x1000 -e 0x1000 $^ --oformat binary
 
 %.o : %.c ${HEADERS}
-	gcc -Wall -Wextra -std=c90 -ffreestanding -fno-pie -m32 -c $< -o $@
+	gcc $(CCFLAGS) -c $< -o $@
 
 %.o : %.s
 	nasm $< -f elf32 -o $@
@@ -23,7 +29,7 @@ kernel.bin : kernel/kernel_entry.o ${OBJ}
 	nasm $< -f bin -o $@
 
 kernel.o : kernel.c
-	gcc -Wall -Wextra -std=c90 -ffreestanding -fno-pie -m32 -c $< -o $@
+	gcc $(CCFLAGS) -c $< -o $@
 
 kernel_entry.o : kernel_entry.s
 	nasm $< -f elf32 -o $@
