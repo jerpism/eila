@@ -45,6 +45,9 @@
 # Binaries
 *.bin
 
+# disk image
+os-image
+
 # Kernel Module Compile Results
 *.mod*
 *.cmd
