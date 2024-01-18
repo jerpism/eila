@@ -42,7 +42,11 @@ SECTION .data
 
 
 SECTION .text
+
 [bits 16]
+KERNEL_OFFSET equ 0x1000
+
+_start:
     mov     [BOOT_DRIVE], dl    ; store boot drive
 
     ; set up temporary stack
@@ -54,17 +58,51 @@ SECTION .text
     mov     ds, ax
     mov     es, ax
 
+    ; welcome message
     mov     bx, STR_WELCOME
     call    print_str
 
+    ; start reading disk
+    mov     bx, STR_READDISK
+    call    print_str
 
+    mov     bx, KERNEL_OFFSET   ; load read data to KERNEL_OFFSET
+    mov     dh, 15              ; read 15 sectors
+    mov     dl, [BOOT_DRIVE]    ; from the drive we booted
+    call    read_disk
+
+
+
+
+read_disk:
+    push    dx
+    mov     ah, 0x2     ; read disk call
+    mov     al, dh      ; # of sectors
+    mov     ch, 0x0     ; Cylinder 0
+    mov     dh, 0x0     ; Head 0 
+    mov     cl, 0x2     ; Sector 2
+
+    int     0x13
+    jc      .error
+
+    ; See if read sectors equals requested
+    pop     dx
+    cmp     al, dh
+    jne     .error
+
+    ret
+
+    .error:
+    mov     bx, STR_DISKERROR
+    call    print_str
+    hlt
 
 
 ; Simple print routine for real mode
-; Prints a NUL terminted string pointed to by bx
+; Prints a NUL terminated string pointed to by bx
 print_str:
     push    ax
-    mov     ah, 0x0e
+    mov     ah, 0x0e    ; print character call
 
     .loop:
     mov     al, [bx]
@@ -72,16 +110,31 @@ print_str:
     jz      .end
 
     int     0x10
+
     add     bx, 1
     jmp     .loop
     
     .end:
     pop     ax
     ret
-    
+
+
+; PROTECTED MODE BEGINS HERE
+[bits 32]
+BEGIN_PM:
+
+
+
+
+
+
+
+; Variables
 BOOT_DRIVE: db 0
     
 STR_WELCOME: db "Hello! Booted up in real mode", 0xa, 0xd, 0x0
+STR_READDISK: db "Reading disk...", 0xa, 0xd, 0x0
+STR_DISKERROR: db "ERROR READING DISK", 0xa, 0xd, 0x0
 
 ; Padding and boot sector magic
 times 510-($-$$) db 0
