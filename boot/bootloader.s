@@ -40,6 +40,10 @@ SECTION .data
         dw  gdt_end - gdt_start - 1 ; size of GDT
         dd  gdt_start               ; start of GDT
 
+    ; helper macros for offsets
+    CODE_SEG equ gdt_code - gdt_start
+    DATA_SEG equ gdt_data - gdt_start
+
 
 SECTION .text
 
@@ -62,7 +66,7 @@ _start:
     mov     bx, STR_WELCOME
     call    print_str
 
-    ; start reading disk
+    ; read out kernel from disk 
     mov     bx, STR_READDISK
     call    print_str
 
@@ -71,6 +75,11 @@ _start:
     mov     dl, [BOOT_DRIVE]    ; from the drive we booted
     call    read_disk
 
+    ; leave the real world behind
+    ; will never return
+    call    switch_to_pm
+
+    jmp     $
 
 
 
@@ -119,19 +128,47 @@ print_str:
     ret
 
 
+; Load GDT and jump to protected mode
+switch_to_pm:
+    cli                         ; need to disable interrupts
+    lgdt    [gdt_descriptor]    ; load gdt
+
+    ; set bit 1 in cr0
+    ; this enables protected mode
+    mov     eax, cr0
+    or      eax, 0x1
+    mov     cr0, eax
+
+    ; Perform a long jump to flush our pipeline
+    jmp     CODE_SEG:BEGIN_PM
+
+
 ; PROTECTED MODE BEGINS HERE
 [bits 32]
 BEGIN_PM:
+    ; Initialize segment registers
+    mov     ax, DATA_SEG
+    mov     ds, ax
+    mov     ss, ax
+    mov     es, ax
+    mov     fs, ax
+    mov     gs, ax
 
+    ; and set up stack again
+    mov     ebp, 0x9000
+    mov     esp, ebp
 
-
-
+    ; Off to C we sail
+    ; this will never return
+    call    KERNEL_OFFSET
+    jmp     $
 
 
 
 ; Variables
 BOOT_DRIVE: db 0
-    
+
+; Strings
 STR_WELCOME: db "Hello! Booted up in real mode", 0xa, 0xd, 0x0
 STR_READDISK: db "Reading disk...", 0xa, 0xd, 0x0
 STR_DISKERROR: db "ERROR READING DISK", 0xa, 0xd, 0x0
