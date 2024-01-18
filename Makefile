@@ -1,4 +1,4 @@
-C_SOURCES = $(wildcard kernel/*.c)
+C_SOURCES = $(wildcard kernel/*.c kernel/arch/x86/*.c) 
 HEADERS = $(wildcard kernel/*.h include/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
@@ -6,7 +6,7 @@ CCFLAGS = -m32 -std=c90 -Og \
 	  -Wall -Wextra \
 	  -nostdlib -ffreestanding \
 	  -fno-pie -fno-stack-protector \
-	  -I ./include/
+	  -I include/ -I include/arch/x86
 
 all: os-image
 
