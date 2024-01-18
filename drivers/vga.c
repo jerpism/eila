@@ -73,6 +73,7 @@ static inline uint16_t set_cursor(uint16_t offset){
     return offset;
 }
 
+
 /* Print a character at col, row */
 /* Specify -1 for white on black at current cursor position */
 void print_char(uint8_t character, int color, int col, int row){
@@ -93,13 +94,19 @@ void print_char(uint8_t character, int color, int col, int row){
         set_cursor(offset);
     }
 
-    /* TODO: add newline handling */
-
-    /* Write out character with specified bg and fg colors */
-    /* and point to next character */
-    *(VGA_MEM + offset++) = (color << 8) | character;
+    /* Skip to the end of the current row if we hit a newline
+     * this will automatically advance us to the next one on offset increment */
+    if(character == '\n'){
+        int cur_row = offset / SCREEN_WIDTH;
+        offset = get_offset(79, cur_row);
+    }else{
+        /* Write out character with specified bg and fg colors */
+        *(VGA_MEM + offset) = (color << 8) | character;
+    }
+    offset++;
     set_cursor(offset);
 }
+
 
 void print_at(char *s, int col, int row){
     /* TODO: this is janky, I don't like repeating 
@@ -115,10 +122,12 @@ void print_at(char *s, int col, int row){
     }
 }
 
+
 /* Prints a string at current cursor position */
 void print(char *s){
     print_at(s, -1, -1);
 }
+
 
 /* Clears the screen */
 void clear_screen(){
@@ -132,6 +141,7 @@ void clear_screen(){
     set_cursor(get_offset(0, 0));
 }
 
+
 /* Prints a colored string at cursor position */
 void print_color(struct color_string *s){
     for(int i = 0; s->str[i]; ++i){
@@ -142,12 +152,15 @@ void print_color(struct color_string *s){
 
 void test_print(){
     struct color_string string = {
-        .str = "And hello this is a colorful string",
-        .color = get_color(LRED, BLUE)
+        .str = "This technically makes bad apple possible\n",
+        .color = get_color(BLACK, BWHITE)
     };
-        
+
     clear_screen();
-    print("Hello we are loaded into the kernel and have a working VGA text mode print :)! ");
     print_color(&string);
+    print("Test\n\n");
+    print("Test2\n");
+    print_color(&string);
+
 }
 
