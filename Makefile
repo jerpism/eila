@@ -4,8 +4,8 @@ OBJ = ${C_SOURCES:.c=.o}
 
 CCFLAGS = -m32 -std=c99 -Og \
 	  -Wall -Wextra -Wpedantic \
-	  -nostdlib -ffreestanding \
-	  -fno-pie -fno-stack-protector \
+	  -nostdlib -ffreestanding -nostdinc -nostartfiles -nodefaultlibs \
+	  -fno-pie -fno-stack-protector -fno-builtin \
 	  -I include/ -I include/arch/x86
 
 all: os-image
