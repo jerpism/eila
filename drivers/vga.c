@@ -73,6 +73,12 @@ static inline uint16_t set_cursor(uint16_t offset){
     return offset;
 }
 
+/* Print out something at a given offset 
+ * absolutely no checking on anything */
+void print_cell(uint8_t character, uint8_t color, int offset){
+    uint16_t *VGA_MEM = (uint16_t*)0xb8000;
+    *(VGA_MEM + offset) = (color << 8) | character;
+}
 
 /* Print a character at col, row */
 /* Specify -1 for white on black at current cursor position */
@@ -100,7 +106,10 @@ void print_char(uint8_t character, int color, int col, int row){
         int cur_row = offset / SCREEN_WIDTH;
         offset = get_offset(79, cur_row);
     }else{
-        /* Write out character with specified bg and fg colors */
+        /* Write out character with specified bg and fg colors 
+         * This could maybe be replaced with a call to print_cell()
+         * but there's not much point wasting 
+         * overhead on replacing a line with a line */
         *(VGA_MEM + offset) = (color << 8) | character;
     }
     offset++;
@@ -161,6 +170,7 @@ void test_print(){
     print("Test\n\n");
     print("Test2\n");
     print_color(&string);
+    print_cell('A', get_color(RED, BWHITE), 80);
 
 }
 
