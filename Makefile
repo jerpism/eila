@@ -2,10 +2,10 @@ C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/arch/x86/*.c lib/*.c)
 HEADERS = $(wildcard kernel/*.h include/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
-CCFLAGS = -m32 -std=c99 -Og \
+CCFLAGS = -m32 -std=c99 -Og -march=i386 \
 	  -Wall -Wextra -Wpedantic \
 	  -nostdlib -ffreestanding -nostdinc -nostartfiles -nodefaultlibs \
-	  -fno-pie -fno-stack-protector -fno-builtin \
+	  -fno-pie -fno-stack-protector -fno-builtin -mno-sse \
 	  -I include/ -I include/arch/x86
 
 all: os-image
