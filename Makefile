@@ -1,4 +1,4 @@
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/arch/x86/*.c) 
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/arch/x86/*.c lib/*.c) 
 HEADERS = $(wildcard kernel/*.h include/*.h)
 OBJ = ${C_SOURCES:.c=.o}
 
