@@ -1,6 +1,7 @@
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c kernel/arch/x86/*.c lib/*.c) 
+NASM_SOURCES = $(wildcard kernel/*.s kernel/arch/x86/*.s)
 HEADERS = $(wildcard kernel/*.h include/*.h)
-OBJ = ${C_SOURCES:.c=.o}
+OBJ = ${C_SOURCES:.c=.o} ${NASM_SOURCES:.s=.o}
 
 CCFLAGS = -m32 -std=c99 -Og -march=i386 \
 	  -Wall -Wextra -Wpedantic \
