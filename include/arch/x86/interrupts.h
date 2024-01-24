@@ -18,6 +18,7 @@ typedef struct {
     uint32_t   base; 
 }__attribute__((packed)) idtr_t;
 
+void idt_init(void);
 
 #endif
 
