@@ -1,4 +1,4 @@
-#include <io.h>
+#include <arch/x86/io.h>
 
 /* C wrappers for port input */
 uint8_t port_in_b(uint16_t port){
