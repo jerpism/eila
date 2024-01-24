@@ -10,7 +10,6 @@ void pictest(){
     uint16_t test = 0;
     char buff[8];
     pic_remap(0x20, 0x28);
-    irq_set_mask(9);
     idt_init();
 
     print("ISR register: ");
@@ -35,6 +34,10 @@ void pictest(){
 void main(){
     print("Hello you're in the kernel now\n");
 
+    /* mask out all but keyboard */
+    port_out_b(0x21, 0xFD);
 
     pictest();
+    while(1) __asm__ volatile ("hlt");
+
 }

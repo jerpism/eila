@@ -1,7 +1,9 @@
 #include <arch/x86/interrupts.h>
+#include <arch/x86/8259.h>
 #include <arch/x86/io.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <vga.h>
 
 
 /* General exception handler */
@@ -17,6 +19,8 @@ void idt_init();
 __attribute__((aligned(0x10)))
 static idt_entry_t idt[256];
 
+
+static bool vectors[IDT_MAX_DESCRIPTORS];
 
 static idtr_t idtr;
 extern void *isr_stub_table[];
@@ -38,13 +42,29 @@ void idt_set_descriptor(uint8_t vector, void *isr, uint8_t flags){
 }
 
 
+void testroutine(){
+    /* TODO: don't leave this here, it's bad. */
+    __asm__ volatile("pusha");
+
+    print("Interrupted!\n"); //just a test message
+    (void)port_in_b(0x60);
+                            
+    port_out_b(0x20, 0x20); // and signal EOI
+
+    /* TODO: PLEASE PLEASE REMOVE THIS */
+    __asm__ volatile("popa; leave; iret");
+}
+
 void idt_init(){
     idtr.base = (uintptr_t)&idt[0];
     idtr.limit = (uint16_t)sizeof(idt_entry_t) * IDT_MAX_DESCRIPTORS - 1;
 
     for(uint8_t vector = 0; vector < 32; ++vector){
-        idt_set_descriptor(vector, isr_stub_table[vector], 0x8E);
+       idt_set_descriptor(vector, isr_stub_table[vector], 0x8E);
+        vectors[vector] = true;
     }
+
+    idt_set_descriptor(0x21, testroutine, 0x8E);
 
     /* Load IDT */
     __asm__ volatile("\tlidt %0"
@@ -52,5 +72,8 @@ void idt_init(){
                     : "m"(idtr));
     /* and enable interrupts */
     __asm__ volatile("sti");
+
+
 }
+
 
