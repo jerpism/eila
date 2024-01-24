@@ -26,9 +26,11 @@ typedef struct {
 }__attribute__((packed)) idtr_t;
 
 void idt_init(void);
+
 void pic_remap(int, int);
 uint16_t pic_get_irr(void);
 uint16_t pic_get_isr(void);
+uint16_t pic_get_imr(void);
 
 /* TODO: these maybe don't need to be visible */
 void irq_clear_mask(uint8_t);

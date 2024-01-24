@@ -156,3 +156,8 @@ uint16_t pic_get_irr(){
 uint16_t pic_get_isr(){
     return (_pic_get_irq_reg(0x0b));
 }
+
+/* Reads IMR of both PICs */
+uint16_t pic_get_imr(){
+    return (port_in_b(PIC2_DATA) << 8) |port_in_b(PIC1_DATA);
+}
