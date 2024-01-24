@@ -6,7 +6,7 @@ CCFLAGS = -m32 -std=c99 -Og -march=i386 \
 	  -Wall -Wextra -Wpedantic \
 	  -nostdlib -ffreestanding -nostdinc -nostartfiles -nodefaultlibs \
 	  -fno-pie -fno-stack-protector -fno-builtin -mno-sse \
-	  -I include/ -I include/arch/x86
+	  -I include/ 
 
 all: os-image
 
