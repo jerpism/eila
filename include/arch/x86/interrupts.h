@@ -4,6 +4,13 @@
 
 #define IDT_MAX_DESCRIPTORS 256
 
+#define PIC1            0x20
+#define PIC2            0xA0
+#define PIC1_COMMAND    PIC1
+#define PIC1_DATA       (PIC1+1)
+#define PIC2_COMMAND    PIC2
+#define PIC2_DATA       (PIC2+1)
+
 /* Taken from wiki.osdev.org */
 typedef struct {
     uint16_t    isr_low;    /* lower 16 bits of ISR address */
@@ -19,6 +26,13 @@ typedef struct {
 }__attribute__((packed)) idtr_t;
 
 void idt_init(void);
+void pic_remap(int, int);
+uint16_t pic_get_irr(void);
+uint16_t pic_get_isr(void);
+
+/* TODO: these maybe don't need to be visible */
+void irq_clear_mask(uint8_t);
+void irq_set_mask(uint8_t);
 
 #endif
 
