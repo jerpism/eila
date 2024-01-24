@@ -1,5 +1,5 @@
-#ifndef STDINT_H
-#define STDINT_H
+#ifndef STDINT_H_
+#define STDINT_H_
 
 typedef unsigned char       uint8_t;
 typedef unsigned short      uint16_t;
@@ -11,9 +11,11 @@ typedef signed short        int16_t;
 typedef signed int          int32_t;
 typedef signed long long    int64_t;
 
-/* Define size_t as a 32bit uint on this system */
 typedef unsigned int        size_t;
 typedef signed int          ssize_t;
 
+typedef unsigned int        uintptr_t;
+typedef signed  int         intptr_t;
 
-#endif /* STDINT_H */
+
+#endif /* STDINT_H_ */
