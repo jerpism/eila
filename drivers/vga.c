@@ -1,6 +1,6 @@
 /* Some (very) basic 80x25 text mode control */
 #include <vga.h>
-#include <io.h>
+#include <arch/x86/io.h>
 #include <stdint.h>
 
 #define SCREEN_WIDTH   80
