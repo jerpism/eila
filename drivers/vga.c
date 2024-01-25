@@ -62,13 +62,9 @@ static inline int scroll(int offset){
         for(int i = lastrow; i < bufflen; ++i){
             VGA_MEM[i] =  0x20;
         }
-
         return lastrow;
-
     }
-
     return offset;
-
 }
 
 /* Get current CHARACTER offset of cursor */
@@ -182,21 +178,5 @@ void print_color(struct color_string *s){
     for(int i = 0; s->str[i]; ++i){
         print_char(s->str[i], s->color, -1, -1);
     }
-}
-
-
-void test_print(){
-    struct color_string string = {
-        .str = "This technically makes bad apple possible\n",
-        .color = get_color(BLACK, BWHITE)
-    };
-
-    clear_screen();
-    print_color(&string);
-    print("Test\n\n");
-    print("Test2\n");
-    print_color(&string);
-    print_cell('A', get_color(RED, BWHITE), 80);
-
 }
 
