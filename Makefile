@@ -41,3 +41,4 @@ bootloader.bin : bootloader.s
 clean:
 	rm -rf *.bin *.o *.dis *.map os-image
 	rm -rf kernel/*.o boot/*.bin 
+	rm -rf kernel/arch/x86/*.o 
