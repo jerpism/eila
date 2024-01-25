@@ -38,6 +38,7 @@ void main(){
     port_out_b(0x21, 0xFD);
 
     pictest();
+    clear_screen();
     while(1) __asm__ volatile ("hlt");
 
 }
