@@ -2,6 +2,7 @@
 #include <vga.h>
 #include <arch/x86/io.h>
 #include <stdint.h>
+#include <libc.h>
 
 #define SCREEN_WIDTH   80
 #define SCREEN_HEIGHT  25
@@ -44,6 +45,30 @@ static inline uint8_t get_color(vga_color_t fg, vga_color_t bg){
 /* Get a CHARACTER offset for given col, row position */
 static inline int get_offset(int col, int row){
     return (row * SCREEN_WIDTH + col);
+}
+
+/* Probably not the best implementation ever but at least it works */
+static inline int scroll(int offset){
+    uint16_t *VGA_MEM = (uint16_t*)0xb8000;
+    int bufflen = SCREEN_WIDTH * SCREEN_HEIGHT;
+    int lastrow = (SCREEN_HEIGHT - 1) * SCREEN_WIDTH;
+
+    if(offset > bufflen - 1){
+        for(int i = 0; i < bufflen; ++i){ 
+            VGA_MEM[i] = VGA_MEM[i + SCREEN_WIDTH];
+        }
+
+        /* Write out spaces for last row */
+        for(int i = lastrow; i < bufflen; ++i){
+            VGA_MEM[i] =  0x20;
+        }
+
+        return lastrow;
+
+    }
+
+    return offset;
+
 }
 
 /* Get current CHARACTER offset of cursor */
@@ -113,7 +138,8 @@ void print_char(uint8_t character, int color, int col, int row){
         *(VGA_MEM + offset) = (color << 8) | character;
     }
     offset++;
-    set_cursor(offset);
+
+    set_cursor(scroll(offset));
 }
 
 
