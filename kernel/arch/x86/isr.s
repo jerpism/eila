@@ -1,3 +1,37 @@
+; send 0x20 to PIC
+; signalling end of interrupt
+signal_eoi:
+    mov     al, 0x20
+    out     0x20, al
+    ret
+
+; 0x21 keyboard
+extern isr21
+global isr_0x21
+isr_0x21:
+    pusha
+    call    isr21
+    call    signal_eoi
+    popa
+    iret
+
+; 0x80 test
+extern isr80
+global isr_0x80
+isr_0x80:
+    pusha
+    call    isr80
+    call    signal_eoi
+    popa
+    iret
+
+
+
+
+
+; 0x00-0x20 processor exceptions
+; TODO: actually implement something here
+; for now just call the handler that halts system
 global isr_stub_table
 isr_stub_table:
 %assign i 0
@@ -17,7 +51,6 @@ isr_stub_%+%1:
     call    exception_handler
     iret
 %endmacro
-
 
 extern exception_handler
 isr_no_err_stub 0

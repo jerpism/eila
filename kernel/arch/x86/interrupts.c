@@ -6,6 +6,10 @@
 #include <vga.h>
 
 
+extern void *isr_stub_table[];
+extern void isr_0x21();
+extern void isr_0x80();
+
 /* General exception handler */
 __attribute__((noreturn))
 void exception_handler(void);
@@ -19,12 +23,8 @@ void idt_init();
 __attribute__((aligned(0x10)))
 static idt_entry_t idt[256];
 
-
 static bool vectors[IDT_MAX_DESCRIPTORS];
-
 static idtr_t idtr;
-extern void *isr_stub_table[];
-
 
 /* Just hangs on exception */
 void exception_handler(){
@@ -41,18 +41,14 @@ void idt_set_descriptor(uint8_t vector, void *isr, uint8_t flags){
     descriptor->reserved    = 0;
 }
 
+void isr21(){
+    /* Will print this twice, once for press and once for release */
+    print("Got int 0x21\n"); 
+    (void)port_in_b(0x60); // just empty out buffer, don't care about content
+}
 
-void testroutine(){
-    /* TODO: don't leave this here, it's bad. */
-    __asm__ volatile("pusha");
-
-    print("Interrupted!\n"); //just a test message
-    (void)port_in_b(0x60);
-                            
-    port_out_b(0x20, 0x20); // and signal EOI
-
-    /* TODO: PLEASE PLEASE REMOVE THIS */
-    __asm__ volatile("popa; leave; iret");
+void isr80(){
+    print("Got int 0x80\n");
 }
 
 void idt_init(){
@@ -64,7 +60,7 @@ void idt_init(){
         vectors[vector] = true;
     }
 
-    idt_set_descriptor(0x21, testroutine, 0x8E);
+    idt_set_descriptor(0x21, isr_0x21, 0x8E);
 
     /* Load IDT */
     __asm__ volatile("\tlidt %0"
