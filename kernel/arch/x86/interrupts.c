@@ -31,16 +31,6 @@ void exception_handler(){
     __asm__ volatile("cli; hlt");
 }
 
-void idt_set_descriptor(uint8_t vector, void *isr, uint8_t flags){
-    idt_entry_t *descriptor = &idt[vector];
-
-    descriptor->isr_low     = (uint32_t)isr & 0xFFFF;
-    descriptor->kernel_cs   = 0x08; /* CS offset from GDT */
-    descriptor->attributes  = flags;
-    descriptor->isr_high    = (uint32_t)isr >> 16;
-    descriptor->reserved    = 0;
-}
-
 void isr21(){
     char buff[16];
     uint8_t kc = 0;
@@ -54,6 +44,17 @@ void isr21(){
 void isr80(){
     print("Got int 0x80\n");
 }
+
+void idt_set_descriptor(uint8_t vector, void *isr, uint8_t flags){
+    idt_entry_t *descriptor = &idt[vector];
+
+    descriptor->isr_low     = (uint32_t)isr & 0xFFFF;
+    descriptor->kernel_cs   = 0x08; /* CS offset from GDT */
+    descriptor->attributes  = flags;
+    descriptor->isr_high    = (uint32_t)isr >> 16;
+    descriptor->reserved    = 0;
+}
+
 
 void idt_init(){
     idtr.base = (uintptr_t)&idt[0];
