@@ -1,10 +1,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <vga.h>
+#include <keyboard.h>
 #include <libc.h>
 #include <arch/x86/io.h>
 #include <arch/x86/interrupts.h>
 #include <arch/x86/8259.h>
+
 
 void pictest(){
     uint16_t test = 0;
@@ -36,9 +38,12 @@ void main(){
 
     /* mask out all but keyboard */
     port_out_b(0x21, 0xFD);
+    register_kb();
 
     pictest();
 //    clear_screen();
     while(1) __asm__ volatile ("hlt");
+
+    
 
 }
