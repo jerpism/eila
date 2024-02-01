@@ -31,17 +31,7 @@ void exception_handler(){
     __asm__ volatile("cli; hlt");
 }
 
-void isr21(){
-    char buff[16];
-    uint8_t kc = 0;
-
-    /* reads out kb buffer and prints out scancode */
-    kc = port_in_b(0x60);
-    itoa(kc, buff, 16);
-    print(buff); 
-}
-
-void isr80(){
+void isr_0x80(){
     print("Got int 0x80\n");
 }
 
@@ -64,10 +54,6 @@ void idt_init(){
        idt_set_descriptor(vector, isr_stub_table[vector], 0x8E);
         vectors[vector] = true;
     }
-
-    /* Note: casting a fp* to a void* is technically UB
-     * but this should work for now even if it generates an ugly warning */
-    idt_set_descriptor(0x21, (void*)isr_0x21, 0x8E);
 
     /* Load IDT */
     __asm__ volatile("\tlidt %0"

@@ -6,21 +6,21 @@ signal_eoi:
     ret
 
 ; 0x21 keyboard
-extern isr21
-global isr_0x21
-isr_0x21:
+extern isr_0x21
+global _isr_0x21
+_isr_0x21:
     pusha
-    call    isr21
+    call    isr_0x21
     call    signal_eoi
     popa
     iret
 
 ; 0x80 test
-extern isr80
-global isr_0x80
-isr_0x80:
+extern isr_0x80
+global _isr_0x80
+_isr_0x80:
     pusha
-    call    isr80
+    call    isr_0x80
     call    signal_eoi
     popa
     iret
