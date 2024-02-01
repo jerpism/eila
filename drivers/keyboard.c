@@ -40,15 +40,15 @@ static bool alt_state   = 0;
 #define F11 0
 #define F12 0
 
-#define ARROW_UP
-#define ARROW_DOWN
-#define ARROW_LEFT
-#define ARROW_RIGHT
+#define ARROW_UP    0
+#define ARROW_DOWN  0
+#define ARROW_LEFT  0
+#define ARROW_RIGHT 0
 
-#define KB_HOME
-#define KB_PGUP
-#define KB_PGDN
-#define KB_END
+#define KB_HOME 0
+#define KB_PGUP 0
+#define KB_PGDN 0
+#define KB_END  0
 
 /* Map scancodes to ASCII values */ 
 /* Could do with better formatting probably, breaks 80 column rule */
