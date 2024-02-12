@@ -8,3 +8,6 @@ If, for whatever reason, you actually wish to run this (you really aren't missin
 To build, `make all` or just `make`. 
 
 To run in qemu, either `make run` to build and run, or open `os-image` in qemu. 
+
+
+![example](example.gif)
