@@ -60,7 +60,7 @@ static unsigned char kbmap[] = {
     0,              /* 0x1D lctrl */
     'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', /* 0x1E-0x28 */
     '`',            /* 0x29 backtick */
-    '0',            /* 0x2A lshift */
+    0,              /* 0x2A lshift */
     '\\',           /* 0x2B backslash */
     'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', /* 0x2C-0x34 */
     '/',            /* 0x35 slash */
@@ -96,9 +96,43 @@ void isr_0x21(){
 
     kc = port_in_b(0x60);
 
+
+    switch(kc){
+        /* lctrl pressed */
+        case 0x1D:
+            ctrl_state = 1;
+            break;
+
+        /* lshift pressed */
+        case 0x2A:
+            shift_state = 1;
+            break;
+
+        /* lctrl released */
+        case 0x9D:
+            ctrl_state = 0;
+            break;
+
+        /* lshift released */
+        case 0xAA:
+            shift_state = 0;
+            break;
+
+        default:
+    }
+
+
     if(kc < 0x58){
         buff[0] = kbmap[kc];
         buff[1] = '\0';
+
+        /* VERY rough convert to uppercase when shift held */
+        if(shift_state){
+            if(buff[0] >= 'a' && buff[0] <= 'z'){
+                buff[0] -= 0x20;
+            }
+        }
+
         print(buff);
     }
 
