@@ -91,16 +91,17 @@ static unsigned char kbmap[] = {
 
 
 void isr_0x21(){
-    char buff[4];
+    char buff[2];
     uint8_t kc = 0;
 
-    /* reads out kb buffer and prints out scancode */
     kc = port_in_b(0x60);
-//    buff[0] = kbmap[kc];
-    itoa(kc, buff, 16);
 
-    /*itoa(kbmap[kc], buff, 10);*/
-    print(buff); 
+    if(kc < 0x58){
+        buff[0] = kbmap[kc];
+        buff[1] = '\0';
+        print(buff);
+    }
+
 
 }
 
