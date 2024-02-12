@@ -121,11 +121,18 @@ void print_char(uint8_t character, int color, int col, int row){
         set_cursor(offset);
     }
 
+
+    /* TODO: not really happy with this at the moment, should be changed to a switch */
     /* Skip to the end of the current row if we hit a newline
      * this will automatically advance us to the next one on offset increment */
     if(character == '\n'){
         int cur_row = offset / SCREEN_WIDTH;
         offset = get_offset(79, cur_row);
+    }else if(character == '\b'){
+        offset = get_cursor();
+        if(offset > 1){
+            offset -= 2;
+        }
     }else{
         /* Write out character with specified bg and fg colors 
          * This could maybe be replaced with a call to print_cell()
