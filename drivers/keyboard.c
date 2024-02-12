@@ -121,6 +121,12 @@ void isr_0x21(){
         default:
     }
 
+    /* clear on ctrl+l */
+    if(ctrl_state == 1 && kc == 0x26){
+        clear_screen();
+        return;
+    }
+
 
     if(kc < 0x58){
         buff[0] = kbmap[kc];
