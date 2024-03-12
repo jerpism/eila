@@ -21,10 +21,10 @@ void idt_init();
 
 /* Aligned IDT */
 __attribute__((aligned(0x10)))
-static idt_entry_t idt[256];
+static struct idt_entry idt[256];
 
 static bool vectors[IDT_MAX_DESCRIPTORS];
-static idtr_t idtr;
+static struct idtr idtr;
 
 /* Just hangs on exception */
 void exception_handler(){
@@ -36,7 +36,7 @@ void isr_0x80(){
 }
 
 void idt_set_descriptor(uint8_t vector, void *isr, uint8_t flags){
-    idt_entry_t *descriptor = &idt[vector];
+    struct idt_entry *descriptor = &idt[vector];
 
     descriptor->isr_low     = (uint32_t)isr & 0xFFFF;
     descriptor->kernel_cs   = 0x08; /* CS offset from GDT */
@@ -48,7 +48,7 @@ void idt_set_descriptor(uint8_t vector, void *isr, uint8_t flags){
 
 void idt_init(){
     idtr.base = (uintptr_t)&idt[0];
-    idtr.limit = (uint16_t)sizeof(idt_entry_t) * IDT_MAX_DESCRIPTORS - 1;
+    idtr.limit = (uint16_t)sizeof(struct idt_entry) * IDT_MAX_DESCRIPTORS - 1;
 
     for(uint8_t vector = 0; vector < 32; ++vector){
        idt_set_descriptor(vector, isr_stub_table[vector], 0x8E);
