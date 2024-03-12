@@ -17,7 +17,7 @@ struct color_string{
     uint8_t color;
 };
 
-typedef enum{
+enum vga_color{
     BLACK   = 0x00,
     BLUE    = 0x01,
     GREEN   = 0x02,
@@ -34,11 +34,11 @@ typedef enum{
     LMAGENTA= 0x0d,
     YELLOW  = 0x0e,
     BWHITE  = 0x0f
-}vga_color_t;
+}vga_color;
 
 
 /* Get value for a given foreground/background pair */
-static inline uint8_t get_color(vga_color_t fg, vga_color_t bg){
+static inline uint8_t get_color(enum vga_color fg, enum vga_color bg){
     return (bg << 4 | fg);
 }
 
