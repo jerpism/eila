@@ -101,10 +101,10 @@ read_disk:
     mov     cl, 0x2     ; Sector 2
 
     int     0x13
+    pop     dx
     jc      .error
 
     ; See if read sectors equals requested
-    pop     dx
     cmp     al, dh
     jne     .error
 
