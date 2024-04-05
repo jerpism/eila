@@ -1,6 +1,7 @@
 [org 0x7c00]
 jmp _start
 
+    align 32
     gdt_start:
 
     ; GDT null descriptor 
@@ -167,6 +168,10 @@ BEGIN_PM:
     mov     ebp, 0x9000
     mov     esp, ebp
 
+    ; check and enable A20
+    call    check_A20
+
+
     ; Off to C we sail
     ; this will never return
     call    KERNEL_OFFSET
@@ -182,6 +187,8 @@ STR_WELCOME: db "Hello! Booted up in real mode", 0xa, 0xd, 0x0
 STR_READDISK: db "Reading disk...", 0xa, 0xd, 0x0
 STR_DISKERROR: db "ERROR READING DISK", 0xa, 0xd, 0x0
 STR_DISKREAD: db "Disk read succesful, switching to protected mode...", 0xa, 0xd, 0x0
+
+%include "./boot/A20.s"
 
 ; Padding and boot sector magic
 times 510-($-$$) db 0
