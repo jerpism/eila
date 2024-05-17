@@ -53,40 +53,49 @@ static bool alt_state   = 0;
 /* Map scancodes to ASCII values */ 
 /* Could do with better formatting probably, breaks 80 column rule */
 static unsigned char kbmap[] = {
-    0,              /* 0x00, not a valid scancode */
-    27,             /* 0x01 esc */
-    '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '=', '\b', /* 0x02-0x0E */
-    '\t', 'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p', '[', ']', '\n', /* 0x0F-0x1C */
-    0,              /* 0x1D lctrl */
-    'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', ';', '\'', /* 0x1E-0x28 */
-    '`',            /* 0x29 backtick */
-    0,              /* 0x2A lshift */
-    '\\',           /* 0x2B backslash */
-    'z', 'x', 'c', 'v', 'b', 'n', 'm', ',', '.', /* 0x2C-0x34 */
-    '/',            /* 0x35 slash */
-    0,              /* 0x36 rshift */
-    '*',            /* 0x37 keypad '*' */
-    0,              /* 0x38 lalt */
-    ' ',            /* 0x39 space */
-    0,              /* 0x3A capslock */
-    F1, F2, F3, F4, F5, F6, F7, F8, F9, F10, /* 0x3B-0x0x44 */
-    0,              /* 0x45 numlock */
-    0,              /* 0x46 scrolllock */
-    KB_HOME,        /* 0x47 home */
-    ARROW_UP,       /* 0x48 up */
-    KB_PGUP,        /* 0x49 pgup */
-    '-',            /* 0x4A kp - */
-    ARROW_LEFT,     /* 0x4B left */
-    0,              /* 0x4C kp 5 */
-    ARROW_RIGHT,    /* 0x4D right */
-    '+',            /* 0x4E kp + */
-    KB_END,         /* 0x4F end */
-    ARROW_DOWN,     /* 0x50 down */
-    KB_PGDN,        /* 0x51 pgdn */
-    0,              /* 0x52 kp 0 */
-    '.',            /* 0x53 kp . */
-    0, 0, 0,        /* 0x54-0x56 unused */
-    F11, F12        /* 0x57-0x58 */
+    0,                  /* 0x00, not a valid scancode */
+    27,                 /* 0x01 esc */
+    '1', '2', '3', '4', /* 0x02-0x05 */
+    '5', '6', '7', '8', /* 0x06-0x09 */
+    '9', '0', '-', '=', /* 0x0A-0x0D */
+    '\b',               /* 0x0E backspace */
+    '\t',               /* 0x0F tab */
+    'q', 'w', 'e', 'r', /* 0x10-0x13 */
+    't', 'y', 'u', 'i', /* 0x14-0x17 */
+    'o', 'p', '[', ']', /* 0x18-0x1B */
+    '\n',               /* 0x1C enter */
+    0,                  /* 0x1D lctrl */
+    'a', 's', 'd', 'f', /* 0x1E-0x21 */
+    'g', 'h', 'j', 'k', /* 0x22-0x25 */
+    'l', ';', '\'','`', /* 0x26-0x29 */
+    0,                  /* 0x2A lshift */
+    '\\','z', 'x', 'c', /* 0x2B-0x2E */
+    'v', 'b', 'n', 'm', /* 0x2F-0x32 */
+    ',', '.', '/',      /* 0x33-0x35 */
+    0,                  /* 0x36 rshift */
+    '*',                /* 0x37 keypad '*' */
+    0,                  /* 0x38 lalt */
+    ' ',                /* 0x39 space */
+    0,                  /* 0x3A capslock */
+    F1, F2, F3, F4, F5, /* 0x3B-0x3F*/
+    F6, F7, F8, F9, F10,/* 0x40-0x44 */
+    0,                  /* 0x45 numlock */
+    0,                  /* 0x46 scrolllock */
+    KB_HOME,            /* 0x47 home */
+    ARROW_UP,           /* 0x48 up */
+    KB_PGUP,            /* 0x49 pgup */
+    '-',                /* 0x4A kp - */
+    ARROW_LEFT,         /* 0x4B left */
+    0,                  /* 0x4C kp 5 */
+    ARROW_RIGHT,        /* 0x4D right */
+    '+',                /* 0x4E kp + */
+    KB_END,             /* 0x4F end */
+    ARROW_DOWN,         /* 0x50 down */
+    KB_PGDN,            /* 0x51 pgdn */
+    0,                  /* 0x52 kp 0 */
+    '.',                /* 0x53 kp . */
+    0, 0, 0,            /* 0x54-0x56 unused */
+    F11, F12            /* 0x57-0x58 */
 };
 
 
