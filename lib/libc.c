@@ -22,12 +22,14 @@ size_t strcpy(char *dst, const char *src){
 }
 
 
-/* TODO: THIS ONLY WORKS WITH SINGLE BYTES RIGHT NOW 
- * NOT COMPLETE IN ANY WAY */
-size_t memcpy(uint8_t *dst, uint8_t *src, size_t n){
+size_t memcpy(void *dst, void *src, size_t n){
     size_t i;
+
+    uint8_t *dstp = (uint8_t*)dst;
+    uint8_t *srcp = (uint8_t*)src;
+
     for(i = 0; i < n; ++i){
-        *dst++ = *src++;
+        *dstp++ = *srcp++;
     }
     return i;
 }
